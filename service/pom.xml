@@ -10,6 +10,10 @@
     </parent>
 
     <artifactId>service</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>service-acl</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -18,6 +22,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>cn.yh</groupId>
+            <artifactId>model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <!--service-util-->
         <dependency>
             <groupId>cn.yh</groupId>
@@ -40,15 +49,15 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <!--nacos服务发现客户端-->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-        <!--feign 服务调用-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash;feign 服务调用&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-openfeign</artifactId>-->
+<!--        </dependency>-->
         <!--sentinel 流量控制-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
