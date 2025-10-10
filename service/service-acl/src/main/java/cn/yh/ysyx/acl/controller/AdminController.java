@@ -1,8 +1,11 @@
 package cn.yh.ysyx.acl.controller;
 
+import cn.yh.ysyx.acl.service.AdminRoleService;
 import cn.yh.ysyx.acl.service.AdminService;
+import cn.yh.ysyx.acl.service.RoleService;
 import cn.yh.ysyx.common.result.Result;
 import cn.yh.ysyx.model.acl.Admin;
+import cn.yh.ysyx.model.acl.Role;
 import cn.yh.ysyx.vo.acl.AdminQueryVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户管理
@@ -25,6 +29,8 @@ public class AdminController {
 
     @Resource
     private AdminService adminService;
+    @Resource
+    private RoleService roleService;
 
     @ApiOperation(value = "获取管理用户分页列表")
     @GetMapping("{page}/{limit}")
@@ -73,6 +79,24 @@ public class AdminController {
     @DeleteMapping("batchRemove")
     public Result<?> batchRemove(@RequestBody List<Long> ids) {
         adminService.removeByIds(ids);
+        return Result.ok(null);
+    }
+
+    @ApiOperation(value = "根据用户获取角色")
+    @GetMapping("/toAssign/{adminId}")
+    public Result<?> toAssign(@PathVariable Long adminId) {
+        Map<String, List<Role>> roleMap =  roleService.findRoleByUserId(adminId);
+        return Result.ok(roleMap);
+    }
+
+    @ApiOperation(value = "根据用户分配角色")
+    @PostMapping("/doAssign")
+    public Result<?> doAssign(
+            @RequestParam Long adminId,
+            @RequestParam Long[] roleId
+    ) {
+        // 删除用户已有角色，再分配角色
+        roleService.saveAdminRole(adminId, roleId);
         return Result.ok(null);
     }
 }
