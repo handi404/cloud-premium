@@ -1,6 +1,7 @@
 package cn.yh.ysyx.acl.controller;
 
 import cn.yh.ysyx.acl.service.PermissionService;
+import cn.yh.ysyx.acl.service.RolePermissionService;
 import cn.yh.ysyx.common.result.Result;
 import cn.yh.ysyx.model.acl.Permission;
 import io.swagger.annotations.Api;
@@ -18,6 +19,8 @@ public class PermissionController {
 
     @Resource
     private PermissionService permissionService;
+    @Resource
+    private RolePermissionService rolePermissionService;
 
     @ApiOperation("获取权限(菜单/功能)列表")
     @GetMapping
@@ -47,6 +50,25 @@ public class PermissionController {
         // permissionService.removeById(id);
         // 递归删除
         permissionService.removeChildById(id);
+        return Result.ok(null);
+    }
+
+
+    @ApiOperation("获取一个角色的所有权限列表")
+    @GetMapping("/toAssign/{roleId}")
+    public Result<?> toAssign(@PathVariable Long roleId) {
+        List<Permission> permissions = permissionService.findPermissionByRoleId(roleId);
+        return Result.ok(permissions);
+    }
+
+    @ApiOperation("给某个角色授权")
+    @PostMapping("/doAssign")
+    public Result<?> doAssign(
+            @RequestParam Long roleId,
+            @RequestParam Long[] permissionId
+    ) {
+        // 删除角色已有权限，再分配权限
+        rolePermissionService.saveRolePermission(roleId, permissionId);
         return Result.ok(null);
     }
 

@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements PermissionService {
 
-
     /**
      * 获取所有菜单列表
      * @return List<Permission> 树形结构菜单
@@ -43,6 +42,30 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         selectChildListById(id, idList);
         idList.add(id);
         this.removeByIds(idList);
+    }
+
+    /**
+     * 查询所有权限与角色拥有权限
+     * @param roleId
+     * @return List<Permission>
+     * @throws
+     */
+    @Override
+    public List<Permission> findPermissionByRoleId(Long roleId) {
+        // 所有权限
+        List<Permission> allPermissions = baseMapper.selectList(
+                new QueryWrapper<Permission>().orderByAsc("CAST(id AS SIGNED)")
+        );
+        // 角色拥有权限
+        List<Permission> rolePermission = baseMapper.selectPermissionsByRoleId(roleId);
+        // 所有权限中标记角色拥有权限: isSelect=true
+        for (Permission permission : allPermissions) {
+            if (rolePermission.contains(permission)) {
+                permission.setSelect(true);
+            }
+        }
+        // 将权限数据转换为树状菜单结构
+        return PermissionHelper.build(allPermissions);
     }
 
     /**

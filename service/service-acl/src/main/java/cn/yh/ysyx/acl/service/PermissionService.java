@@ -22,4 +22,12 @@ public interface PermissionService extends IService<Permission> {
      * @throws 
      */
     void removeChildById(Long id);
+
+    /**
+     * 查询所有权限与角色拥有权限
+     * @param roleId
+     * @return List<Permission>
+     * @throws
+     */
+    List<Permission> findPermissionByRoleId(Long roleId);
 }
