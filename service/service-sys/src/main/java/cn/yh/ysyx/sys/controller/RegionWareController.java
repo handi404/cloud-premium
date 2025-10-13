@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/admin/sys/regionWare")
 @Api(tags = "区域仓库管理")
+@CrossOrigin
 public class RegionWareController {
 
     @Resource
@@ -47,6 +48,23 @@ public class RegionWareController {
     @PostMapping("/save")
     public Result<?> save(@RequestBody RegionWare regionWare) {
         regionWareService.saveRegionWare(regionWare);
+        return Result.ok(null);
+    }
+
+    @ApiOperation("删除开通区域")
+    @DeleteMapping("/remove/{id}")
+    public Result<?> remove(@PathVariable Long id) {
+        regionWareService.removeById(id);
+        return Result.ok(null);
+    }
+
+    @ApiOperation("更新区域开通状态")
+    @PutMapping("/updateStatus/{id}/{status}")
+    public Result<?> updateStatus(
+            @PathVariable Long id,
+            @PathVariable Integer status
+    ) {
+        regionWareService.updateStatus(id, status);
         return Result.ok(null);
     }
 }

@@ -66,4 +66,18 @@ public class RegionWareServiceImpl extends ServiceImpl<RegionWareMapper, RegionW
         // 开通区域
         baseMapper.insert(regionWare);
     }
+
+    /**
+     * 更新区域开通状态
+     * @param id     区域仓库id
+     * @param status 状态(0：未开通 1：已开通)
+     * @return
+     * @throws
+     */
+    @Override
+    public void updateStatus(Long id, Integer status) {
+        RegionWare regionWare = baseMapper.selectById(id);
+        regionWare.setStatus(status);
+        baseMapper.updateById(regionWare);
+    }
 }
