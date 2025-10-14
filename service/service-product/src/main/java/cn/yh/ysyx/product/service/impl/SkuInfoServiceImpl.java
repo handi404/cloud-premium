@@ -121,4 +121,32 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
             skuAttrValueService.saveBatch(skuAttrValueList);
         }
     }
+
+    /**
+     * 根据id获取商品SKU
+     * @param id
+     * @return SkuInfoVo
+     * @throws
+     */
+    @Override
+    public SkuInfoVo getSkuInfoVoById(Long id) {
+        // 根据 id 查询sku_info
+        SkuInfo skuInfo = baseMapper.selectById(id);
+
+        // 根据 SkuId 查询sku_image
+        List<SkuImage> skuImageList = skuImageService.findBySkuId(id);
+        // 根据 SkuId 查询sku_poster
+        List<SkuPoster> skuPosterList = skuPosterService.findBySkuId(id);
+        // 根据 SkuId 查询sku_attr_value
+        List<SkuAttrValue> skuAttrValueList = skuAttrValueService.findBySkuId(id);
+
+        // 构建skuInfoVo
+        SkuInfoVo skuInfoVo = new SkuInfoVo();
+        BeanUtils.copyProperties(skuInfo, skuInfoVo);
+        skuInfoVo.setSkuPosterList(skuPosterList);
+        skuInfoVo.setSkuImagesList(skuImageList);
+        skuInfoVo.setSkuAttrValueList(skuAttrValueList);
+
+        return skuInfoVo;
+    }
 }

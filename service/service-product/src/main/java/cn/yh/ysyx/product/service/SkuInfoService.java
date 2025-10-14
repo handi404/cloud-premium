@@ -33,4 +33,12 @@ public interface SkuInfoService extends IService<SkuInfo> {
      * @throws
      */
     void saveSkuInfo(SkuInfoVo skuInfoVo);
+
+    /**
+     * 根据id获取商品SKU
+     * @param id
+     * @return SkuInfoVo
+     * @throws
+     */
+    SkuInfoVo getSkuInfoVoById(Long id);
 }
