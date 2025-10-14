@@ -16,3 +16,9 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+aliyun:
+  endpoint: ${ALIYUN_ENDPOINT}
+  keyid: ${ALIYUN_KEYID}
+  keysecret: ${ALIYUN_KEYSECRET}
+  bucketname: ${ALIYUN_BUCKETNAME}
