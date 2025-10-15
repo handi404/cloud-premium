@@ -41,4 +41,39 @@ public interface SkuInfoService extends IService<SkuInfo> {
      * @throws
      */
     SkuInfoVo getSkuInfoVoById(Long id);
+
+    /**
+     * 修改商品SKU(info,image,poster.attr_value)
+     * @param skuInfoVo
+     * @return 
+     * @throws 
+     */
+    void updateSkuInfo(SkuInfoVo skuInfoVo);
+
+    /**
+     * 修改商品SKU的审核状态
+     * @param id 商品SKU id
+     * @param status 审核状态：0->未审核；1->审核通过
+     * @return
+     * @throws
+     */
+    void checkStatus(Long id, Integer status);
+
+    /**
+     * 修改商品SKU的上下架状态 (审核通过后才可上架)
+     * @param id 商品SKU id
+     * @param status 上架状态：0->下架；1->上架
+     * @return
+     * @throws
+     */
+    void publishStatus(Long id, Integer status);
+
+    /**
+     * 修改商品SKU是否新人专享
+     * @param id 商品SKU id
+     * @param status 是否新人专享：0->否；1->是
+     * @return
+     * @throws
+     */
+    void isNewPerson(Long id, Integer status);
 }

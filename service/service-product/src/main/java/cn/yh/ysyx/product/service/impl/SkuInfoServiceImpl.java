@@ -11,6 +11,7 @@ import cn.yh.ysyx.product.service.SkuPosterService;
 import cn.yh.ysyx.vo.product.SkuInfoQueryVo;
 import cn.yh.ysyx.vo.product.SkuInfoVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -148,5 +149,101 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
         skuInfoVo.setSkuAttrValueList(skuAttrValueList);
 
         return skuInfoVo;
+    }
+
+    /**
+     * 修改商品SKU(info,image,poster.attr_value)
+     * @param skuInfoVo
+     * @return
+     * @throws
+     */
+    @Override
+    public void updateSkuInfo(SkuInfoVo skuInfoVo) {
+        // 1.更新sku_info
+        baseMapper.updateById(skuInfoVo);
+        Long skuId = skuInfoVo.getId();
+        // 2.删除原有图片，再添加
+        skuImageService.remove(new LambdaUpdateWrapper<SkuImage>().eq(SkuImage::getSkuId, skuId));
+        List<SkuImage> skuImagesList = skuInfoVo.getSkuImagesList();
+        if (!CollectionUtils.isEmpty(skuImagesList)) {
+            int sort = 1;
+            for (SkuImage skuImage : skuImagesList) {
+                skuImage.setSkuId(skuId);
+                skuImage.setSort(sort++);
+            }
+            skuImageService.saveBatch(skuImagesList);
+        }
+        // 3.删除原有海报，再添加
+        skuPosterService.remove(new LambdaUpdateWrapper<SkuPoster>().eq(SkuPoster::getSkuId, skuId));
+        List<SkuPoster> skuPosterList = skuInfoVo.getSkuPosterList();
+        if (!CollectionUtils.isEmpty(skuPosterList)) {
+            for (SkuPoster skuPoster : skuPosterList) {
+                skuPoster.setSkuId(skuId);
+            }
+            skuPosterService.saveBatch(skuPosterList);
+        }
+        // 4.删除原有平台属性值，再添加
+        skuAttrValueService.remove(new LambdaUpdateWrapper<SkuAttrValue>().eq(SkuAttrValue::getSkuId, skuId));
+        List<SkuAttrValue> skuAttrValueList = skuInfoVo.getSkuAttrValueList();
+        if (!CollectionUtils.isEmpty(skuAttrValueList)) {
+            int sort = 1;
+            for (SkuAttrValue skuAttrValue : skuAttrValueList) {
+                skuAttrValue.setSkuId(skuId);
+                skuAttrValue.setSort(sort++);
+            }
+            skuAttrValueService.saveBatch(skuAttrValueList);
+        }
+    }
+
+    /**
+     * 修改商品SKU的审核状态
+     * @param id     商品SKU id
+     * @param status 审核状态：0->未审核；1->审核通过
+     * @return
+     * @throws
+     */
+    @Override
+    public void checkStatus(Long id, Integer status) {
+        SkuInfo skuInfo = new SkuInfo();
+        skuInfo.setId(id);
+        skuInfo.setCheckStatus(status);
+        baseMapper.updateById(skuInfo);
+    }
+
+    /**
+     * 修改商品SKU上架状态
+     * @param id     商品SKU id
+     * @param status 上架状态：0->下架；1->上架
+     * @return
+     * @throws
+     */
+    @Override
+    public void publishStatus(Long id, Integer status) {
+        SkuInfo skuInfo = new SkuInfo();
+        skuInfo.setId(id);
+        if (status == 1) {
+            skuInfo.setPublishStatus(status);
+            baseMapper.updateById(skuInfo);
+            //TODO 商品上架 后续会完善：发送mq消息更新es数据
+        } else {
+            skuInfo.setPublishStatus(0);
+            baseMapper.updateById(skuInfo);
+            //TODO 商品下架 后续会完善：发送mq消息更新es数据
+        }
+    }
+
+    /**
+     * 修改商品SKU是否新人专享
+     * @param id     商品SKU id
+     * @param status 是否新人专享：0->否；1->是
+     * @return
+     * @throws
+     */
+    @Override
+    public void isNewPerson(Long id, Integer status) {
+        SkuInfo skuInfo = new SkuInfo();
+        skuInfo.setId(id);
+        skuInfo.setIsNewPerson(status);
+        baseMapper.updateById(skuInfo);
     }
 }

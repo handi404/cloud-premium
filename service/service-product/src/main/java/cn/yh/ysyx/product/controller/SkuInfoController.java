@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -61,6 +62,60 @@ public class SkuInfoController {
     public Result<?> get(@PathVariable Long id) {
         SkuInfoVo skuInfoVo = skuInfoService.getSkuInfoVoById(id);
         return Result.ok(skuInfoVo);
+    }
+
+    @ApiOperation("修改")
+    @PutMapping("/update")
+    public Result<?> update(@RequestBody SkuInfoVo skuInfoVo) {
+        skuInfoService.updateSkuInfo(skuInfoVo);
+        return Result.ok(null);
+    }
+
+    @ApiOperation("删除")
+    @DeleteMapping("/remove/{id}")
+    public Result<?> remove(@PathVariable Long id) {
+        skuInfoService.removeById(id);
+        return Result.ok(null);
+    }
+
+    @ApiOperation("批量删除")
+    @DeleteMapping("/batchRemove")
+    public Result<?> batchRemove(@RequestBody List<Long> ids) {
+        skuInfoService.removeByIds(ids);
+        return Result.ok(null);
+    }
+
+    // 商品审核
+    @ApiOperation("商品审核")
+    @GetMapping("/check/{id}/{status}")
+    public Result<?> checkStatus(
+            @PathVariable Long id,
+            @PathVariable Integer status
+    ) {
+        skuInfoService.checkStatus(id, status);
+        return Result.ok(null);
+    }
+
+    // 商品上下架
+    @ApiOperation("商品上下架")
+    @GetMapping("/publish/{id}/{status}")
+    public Result<?> publishStatus(
+            @PathVariable Long id,
+            @PathVariable Integer status
+    ) {
+        skuInfoService.publishStatus(id, status);
+        return Result.ok(null);
+    }
+
+    // 商品新人专享
+    @ApiOperation("商品新人专享")
+    @GetMapping("/isNewPerson/{id}/{status}")
+    public Result<?> isNewPerson(
+            @PathVariable Long id,
+            @PathVariable Integer status
+    ) {
+        skuInfoService.isNewPerson(id, status);
+        return Result.ok(null);
     }
 
 }
