@@ -1,5 +1,7 @@
 package cn.yh.ysyx.product.service.impl;
 
+import cn.yh.ysyx.common.constant.MqConst;
+import cn.yh.ysyx.common.service.RabbitService;
 import cn.yh.ysyx.model.product.SkuAttrValue;
 import cn.yh.ysyx.model.product.SkuImage;
 import cn.yh.ysyx.model.product.SkuInfo;
@@ -46,6 +48,8 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
     private SkuImageService skuImageService;
     @Resource
     private SkuAttrValueService skuAttrValueService;
+    @Resource
+    private RabbitService rabbitService;
 
     /**
      * 分页获取商品SKU列表
@@ -212,23 +216,25 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
 
     /**
      * 修改商品SKU上架状态
-     * @param id     商品SKU id
+     * @param skuId     商品SKU id
      * @param status 上架状态：0->下架；1->上架
      * @return
      * @throws
      */
     @Override
-    public void publishStatus(Long id, Integer status) {
+    public void publishStatus(Long skuId, Integer status) {
         SkuInfo skuInfo = new SkuInfo();
-        skuInfo.setId(id);
+        skuInfo.setId(skuId);
         if (status == 1) {
             skuInfo.setPublishStatus(status);
             baseMapper.updateById(skuInfo);
-            //TODO 商品上架 后续会完善：发送mq消息更新es数据
+            // 商品上架 发送mq消息更新es数据
+            rabbitService.sendMessage(MqConst.EXCHANGE_GOODS_DIRECT, MqConst.ROUTING_GOODS_UPPER, skuId);
         } else {
             skuInfo.setPublishStatus(0);
             baseMapper.updateById(skuInfo);
-            //TODO 商品下架 后续会完善：发送mq消息更新es数据
+            // 商品下架 发送mq消息更新es数据
+            rabbitService.sendMessage(MqConst.EXCHANGE_GOODS_DIRECT, MqConst.ROUTING_GOODS_LOWER, skuId);
         }
     }
 

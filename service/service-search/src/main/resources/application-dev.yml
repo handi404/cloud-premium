@@ -14,18 +14,18 @@ spring:
   elasticsearch:
     rest:
       uris: http://localhost:9200 # 可以添加多个（集群）
-#  rabbitmq:
-#    host: 192.168.197.128
-#    port: 5672
-#    username: guest
-#    password: guest
-#    publisher-confirm-type: CORRELATED
-#    publisher-returns: true
-#    listener:
-#      simple:
-#        prefetch: 1
-#        concurrency: 3
-#        acknowledge-mode: manual
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        prefetch: 1
+        concurrency: 3
+        acknowledge-mode: manual
 #  redis:
 #    host: localhost
 #    port: 6379
