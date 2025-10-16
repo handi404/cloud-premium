@@ -15,6 +15,7 @@
         <module>service-acl</module>
         <module>service-sys</module>
         <module>service-product</module>
+        <module>service-search</module>
     </modules>
 
     <properties>
@@ -55,11 +56,11 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-<!--        &lt;!&ndash;feign 服务调用&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-openfeign</artifactId>-->
-<!--        </dependency>-->
+        <!-- feign 服务调用-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
         <!--sentinel 流量控制-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
