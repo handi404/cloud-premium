@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * sku信息 服务类
@@ -76,4 +78,20 @@ public interface SkuInfoService extends IService<SkuInfo> {
      * @throws
      */
     void isNewPerson(Long id, Integer status);
+
+    /**
+     * 根据id集合, 批量获取sku信息
+     * @param skuIdList id集合
+     * @return List<SkuInfo>
+     * @throws
+     */
+    List<SkuInfo> findSkuInfoList(List<Long> skuIdList);
+
+    /**
+     * 根据关键字批量获取sku信息
+     * @param keyword 关键字
+     * @return List<SkuInfo>
+     * @throws
+     */
+    List<SkuInfo> findSkuInfoByKeyword(String keyword);
 }

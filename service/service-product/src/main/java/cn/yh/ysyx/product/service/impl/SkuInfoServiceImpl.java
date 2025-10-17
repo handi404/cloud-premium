@@ -27,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -251,5 +252,29 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
         skuInfo.setId(id);
         skuInfo.setIsNewPerson(status);
         baseMapper.updateById(skuInfo);
+    }
+
+    /**
+     * 根据id集合, 批量获取sku信息
+     * @param skuIdList id集合
+     * @return List<SkuInfo>
+     * @throws
+     */
+    @Override
+    public List<SkuInfo> findSkuInfoList(List<Long> skuIdList) {
+        return baseMapper.selectBatchIds(skuIdList);
+    }
+
+    /**
+     * 根据关键字批量获取sku信息
+     * @param keyword 关键字
+     * @return List<SkuInfo>
+     * @throws
+     */
+    @Override
+    public List<SkuInfo> findSkuInfoByKeyword(String keyword) {
+        LambdaQueryWrapper<SkuInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(SkuInfo::getSkuName, keyword);
+        return baseMapper.selectList(queryWrapper);
     }
 }

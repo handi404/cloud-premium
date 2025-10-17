@@ -4,6 +4,7 @@ package cn.yh.ysyx.activity.controller;
 import cn.yh.ysyx.common.result.Result;
 import cn.yh.ysyx.model.acl.Admin;
 import cn.yh.ysyx.model.activity.ActivityInfo;
+import cn.yh.ysyx.model.product.SkuInfo;
 import cn.yh.ysyx.vo.acl.AdminQueryVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -80,5 +82,19 @@ public class ActivityInfoController {
     public Result<?> batchRemove(@RequestBody List<Long> ids) {
         activityInfoService.removeByIds(ids);
         return Result.ok(null);
+    }
+
+    @ApiOperation("获取活动规则列表")
+    @GetMapping("/findActivityRuleList/{id}")
+    public Result<?> findActivityRuleList(@PathVariable Long id) {
+        Map<String, Object> result = activityInfoService.findActivityRuleList(id);
+        return Result.ok(result);
+    }
+
+    @ApiOperation("根据关键字查询sku信息列表")
+    @GetMapping("/findSkuInfoByKeyword/{keyword}")
+    public Result<?> findSkuInfoByKeyword(@PathVariable String keyword) {
+        List<SkuInfo> skuInfoList = activityInfoService.findSkuInfoByKeyword(keyword);
+        return Result.ok(skuInfoList);
     }
 }
