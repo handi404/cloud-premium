@@ -13,3 +13,4 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-enums-package: cn.yh.ysyx.enums #枚举包
