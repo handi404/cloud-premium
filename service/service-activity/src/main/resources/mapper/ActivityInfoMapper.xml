@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper映射文件 用于定义对应方法执行的sql语句 -->
+<mapper namespace="cn.yh.ysyx.activity.mapper.ActivityInfoMapper">
+
+    <select id="findExistsSkuIdList" resultType="java.lang.Long">
+        select sku_id from activity_info info left join activity_sku sku on info.id = sku.activity_id
+        <where>
+            now() between start_time and end_time and info.is_deleted=0 and sku.is_deleted=0 and info.id
+            and sku_id in
+            <if test="skuIdList!=null">
+                <foreach collection="skuIdList" open="(" close=")" separator="," item="id">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

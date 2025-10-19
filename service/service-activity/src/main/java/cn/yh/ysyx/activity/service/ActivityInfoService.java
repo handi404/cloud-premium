@@ -2,6 +2,7 @@ package cn.yh.ysyx.activity.service;
 
 import cn.yh.ysyx.model.activity.ActivityInfo;
 import cn.yh.ysyx.model.product.SkuInfo;
+import cn.yh.ysyx.vo.activity.ActivityRuleVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -42,4 +43,12 @@ public interface ActivityInfoService extends IService<ActivityInfo> {
      * @throws
      */
     List<SkuInfo> findSkuInfoByKeyword(String keyword);
+
+    /**
+     * 修改活动规则：删除原有的，再新增
+     * @param activityRuleVo
+     * @return
+     * @throws
+     */
+    void saveActivityRule(ActivityRuleVo activityRuleVo);
 }

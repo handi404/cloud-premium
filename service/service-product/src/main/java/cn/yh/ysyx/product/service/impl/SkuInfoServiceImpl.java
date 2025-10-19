@@ -262,6 +262,9 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
      */
     @Override
     public List<SkuInfo> findSkuInfoList(List<Long> skuIdList) {
+        if (skuIdList == null || skuIdList.isEmpty()) {
+            return Collections.emptyList();
+        }
         return baseMapper.selectBatchIds(skuIdList);
     }
 

@@ -6,6 +6,7 @@ import cn.yh.ysyx.model.acl.Admin;
 import cn.yh.ysyx.model.activity.ActivityInfo;
 import cn.yh.ysyx.model.product.SkuInfo;
 import cn.yh.ysyx.vo.acl.AdminQueryVo;
+import cn.yh.ysyx.vo.activity.ActivityRuleVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiParam;
@@ -96,5 +97,12 @@ public class ActivityInfoController {
     public Result<?> findSkuInfoByKeyword(@PathVariable String keyword) {
         List<SkuInfo> skuInfoList = activityInfoService.findSkuInfoByKeyword(keyword);
         return Result.ok(skuInfoList);
+    }
+
+    @ApiOperation("保存活动规则")
+    @PostMapping("/saveActivityRule")
+    public Result<?> saveActivityRule(@RequestBody ActivityRuleVo activityRuleVo) {
+        activityInfoService.saveActivityRule(activityRuleVo);
+        return Result.ok(null);
     }
 }

@@ -8,7 +8,9 @@ import cn.yh.ysyx.model.activity.ActivityRule;
 import cn.yh.ysyx.model.activity.ActivitySku;
 import cn.yh.ysyx.model.product.SkuInfo;
 import cn.yh.ysyx.product.ProductFeignClient;
+import cn.yh.ysyx.vo.activity.ActivityRuleVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -85,7 +84,7 @@ public class ActivityInfoServiceImpl extends ServiceImpl<ActivityInfoMapper, Act
         List<Long> skuIdList = activitySkuList.stream()
                 .map(ActivitySku::getSkuId)
                 .collect(Collectors.toList());
-        // 通过 OpenFeign 远程调用，获取 sku 列表
+        // 通过 OpenFeign 远程调用，根据 skuId 集合获取 sku 列表
         List<SkuInfo> skuInfoList = productFeignClient.findSkuInfoList(skuIdList);
         result.put("skuInfoList", skuInfoList);
 
@@ -100,6 +99,45 @@ public class ActivityInfoServiceImpl extends ServiceImpl<ActivityInfoMapper, Act
      */
     @Override
     public List<SkuInfo> findSkuInfoByKeyword(String keyword) {
-        return productFeignClient.findSkuInfoByKeyword(keyword);
+        List<SkuInfo> skuInfoByKeyword = productFeignClient.findSkuInfoByKeyword(keyword);
+        // 将模糊查询到商品skuId添加到集合中
+        List<Long> skuIdList = skuInfoByKeyword.stream()
+                .map(SkuInfo::getId)
+                .collect(Collectors.toList());
+        // 查询当前时间已参加过(活动时间在当前时间有效的)活动的skuId
+        List<Long> existsSkuIdList = baseMapper.findExistsSkuIdList(skuIdList);
+        // 移除已参加过(活动时间在当前时间有效的)活动的活动信息
+        List<SkuInfo> notExistsSkuInfoList = skuInfoByKeyword.stream()
+                .filter(skuInfo -> !existsSkuIdList.contains(skuInfo.getId()))
+                .collect(Collectors.toList());
+        return notExistsSkuInfoList;
+    }
+
+    /**
+     * 修改活动规则：删除原有的，再新增
+     * @param activityRuleVo
+     * @return
+     * @throws
+     */
+    @Override
+    public void saveActivityRule(ActivityRuleVo activityRuleVo) {
+        Long activityId = activityRuleVo.getActivityId();
+
+        // 删除原有活动规则 activity_rule，再批量添加
+        List<ActivityRule> activityRuleList = activityRuleVo.getActivityRuleList();
+        activityRuleService.remove(
+                new LambdaUpdateWrapper<ActivityRule>().eq(ActivityRule::getActivityId, activityId)
+        );
+        activityRuleService.saveBatch(activityRuleList);
+
+        // 删除原有活动范围 activity_sku, 再批量添加
+        activitySkuService.remove(
+                new LambdaUpdateWrapper<ActivitySku>().eq(ActivitySku::getActivityId, activityId)
+        );
+        List<ActivitySku> activitySkuList = activityRuleVo.getActivitySkuList();
+        activitySkuList.forEach(activitySku -> activitySku.setActivityId(activityId));
+        // 将activitySkuList转换为Set集合(利用Set集合中的元素不重复实现去重)
+        Set<ActivitySku> activitySkuSet = new HashSet<>(activitySkuList);
+        activitySkuService.saveBatch(activitySkuSet);
     }
 }
