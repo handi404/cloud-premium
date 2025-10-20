@@ -25,7 +25,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/admin/sys/ware")
 @Api(tags = "仓库管理")
-@CrossOrigin
+//@CrossOrigin
 public class WareController {
 
     @Resource

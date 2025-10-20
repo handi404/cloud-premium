@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/sys/region")
 @Api(tags = "区域管理")
-@CrossOrigin
+//@CrossOrigin
 public class RegionController {
 
     @Resource

@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/acl/role")
 @Api(tags = "角色管理")
-@CrossOrigin // 跨域
+//@CrossOrigin // 跨域
 public class RoleController {
 
     @Resource

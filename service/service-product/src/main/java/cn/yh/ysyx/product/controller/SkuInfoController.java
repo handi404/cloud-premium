@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/product/skuInfo")
 @Api(tags = "商品SKU管理")
-@CrossOrigin
+//@CrossOrigin
 public class SkuInfoController {
 
     @Resource

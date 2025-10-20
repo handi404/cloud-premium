@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/product/attr")
 @Api(tags = "平台属性管理")
-@CrossOrigin
+//@CrossOrigin
 public class AttrController {
 
     @Resource

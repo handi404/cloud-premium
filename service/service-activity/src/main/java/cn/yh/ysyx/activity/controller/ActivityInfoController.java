@@ -31,7 +31,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/activity/activityInfo")
 @Api(tags = "活动管理")
-@CrossOrigin
+//@CrossOrigin
 public class ActivityInfoController {
 
     @Resource
