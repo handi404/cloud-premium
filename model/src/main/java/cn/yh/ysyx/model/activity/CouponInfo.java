@@ -80,9 +80,9 @@ public class CouponInfo extends BaseEntity {
 	private Boolean publishStatus;
 
 	@TableField(exist = false)
-	private String couponTypeString;
+	private String couponTypeString; // 优惠卷类型名称
 	@TableField(exist = false)
-	private String rangeTypeString;
+	private String rangeTypeString; // 优惠卷使用范围名称
 
 	@ApiModelProperty(value = "使用状态")
 	@TableField(exist = false)
