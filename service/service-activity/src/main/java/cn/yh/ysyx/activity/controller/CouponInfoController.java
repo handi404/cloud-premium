@@ -3,6 +3,7 @@ package cn.yh.ysyx.activity.controller;
 
 import cn.yh.ysyx.common.result.Result;
 import cn.yh.ysyx.model.activity.CouponInfo;
+import cn.yh.ysyx.vo.activity.CouponRuleVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiParam;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -79,6 +81,20 @@ public class CouponInfoController {
     @DeleteMapping("batchRemove")
     public Result<?> batchRemove(@RequestBody List<Long> ids) {
         couponInfoService.removeByIds(ids);
+        return Result.ok(null);
+    }
+
+    @ApiOperation("获取优惠券规则信息")
+    @GetMapping("/findCouponRuleList/{id}")
+    public Result<?> findCouponRuleList(@PathVariable Long id) {
+        Map<String, Object> result = couponInfoService.findCouponRuleList(id);
+        return Result.ok(result);
+    }
+
+    @ApiOperation("新增优惠卷规则")
+    @PostMapping("/saveCouponRule")
+    public Result<?> saveCouponRule(@RequestBody CouponRuleVo couponRuleVo) {
+        couponInfoService.saveCouponRule(couponRuleVo);
         return Result.ok(null);
     }
 }

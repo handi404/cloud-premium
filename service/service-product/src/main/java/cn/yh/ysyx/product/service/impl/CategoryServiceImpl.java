@@ -60,4 +60,18 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                 new LambdaQueryWrapper<Category>().orderByAsc(Category::getSort)
         );
     }
+
+    /**
+     * 根据分类id集合批量获取商品分类信息
+     * @param categoryIdList
+     * @return List<Category>
+     * @throws
+     */
+    @Override
+    public List<Category> findCategoryList(List<Long> categoryIdList) {
+        if (categoryIdList == null || categoryIdList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return baseMapper.selectBatchIds(categoryIdList);
+    }
 }
