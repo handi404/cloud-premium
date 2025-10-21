@@ -40,10 +40,10 @@ spring:
 #          predicates:
 #            - Path=/*/payment/**
 #
-#        - id: service-user
-#          uri: lb://service-user
-#          predicates:
-#            - Path=/*/user/**
+        - id: service-user
+          uri: lb://service-user
+          predicates:
+            - Path=/*/user/**
 #
 #        - id: service-search
 #          uri: lb://service-search
