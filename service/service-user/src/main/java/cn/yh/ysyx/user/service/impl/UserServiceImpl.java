@@ -158,6 +158,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         UserLoginVo userLoginVo = new UserLoginVo();
         User user = baseMapper.selectById(userId);
         BeanUtils.copyProperties(user, userLoginVo);
+        userLoginVo.setUserId(userId);
         // 根据用户id和是否默认地址查询UserDelivery信息
         UserDelivery userDelivery = userDeliveryService.getOne(
                 new LambdaQueryWrapper<UserDelivery>()
