@@ -62,7 +62,7 @@ public class SkuInfo extends BaseEntity {
 
 	@ApiModelProperty(value = "价格")
 	@TableField("price")
-	private BigDecimal price;
+	private Double price;
 
 	@ApiModelProperty(value = "市场价")
 	@TableField("market_price")

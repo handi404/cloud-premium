@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/search/sku")
@@ -30,5 +31,11 @@ public class SkuApiController {
     public Result<?> lowerGoods(@PathVariable Long skuId) {
         skuService.lowerSku(skuId);
         return Result.ok(null);
+    }
+
+    @ApiOperation("获取爆品商品")
+    @GetMapping("/inner/findHotSkuList")
+    public List<SkuEs> findHotSkuList() {
+        return skuService.findHotSkuList();
     }
 }

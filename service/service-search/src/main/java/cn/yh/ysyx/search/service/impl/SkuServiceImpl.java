@@ -7,9 +7,14 @@ import cn.yh.ysyx.product.ProductFeignClient;
 import cn.yh.ysyx.search.repository.SkuRepository;
 import cn.yh.ysyx.search.service.SkuService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class SkuServiceImpl implements SkuService {
@@ -38,6 +43,7 @@ public class SkuServiceImpl implements SkuService {
         // 构建 skuEs
         BeanUtils.copyProperties(skuInfo, skuEs);
         skuEs.setKeyword(skuInfo.getSkuName() + "," + category.getName()); // 构建关键词：sku名+","+类型名
+        skuEs.setTitle(skuInfo.getSkuName());
         SkuEs save = skuRepository.save(skuEs);
         System.out.println(save);
     }
@@ -51,5 +57,18 @@ public class SkuServiceImpl implements SkuService {
     @Override
     public void lowerSku(Long skuId) {
         skuRepository.deleteById(skuId);
+    }
+
+    /**
+     * 获取爆款商品
+     * @return List<SkuEs>
+     * @throws
+     */
+    @Override
+    public List<SkuEs> findHotSkuList() {
+        // 分页并根据hotScore降序排序
+        Pageable pageRequest = PageRequest.of(0, 10);
+        Page<SkuEs> skuEsPage = skuRepository.findByOrderByHotScoreDesc(pageRequest);
+        return skuEsPage.getContent();
     }
 }

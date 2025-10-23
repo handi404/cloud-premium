@@ -44,16 +44,16 @@ spring:
           uri: lb://service-user
           predicates:
             - Path=/*/user/**
-#
-#        - id: service-search
-#          uri: lb://service-search
-#          predicates:
-#            - Path=/*/search/**
-#
-#        - id: service-home
-#          uri: lb://service-home
-#          predicates:
-#            - Path=/*/home/**
+
+        - id: service-search
+          uri: lb://service-search
+          predicates:
+            - Path=/*/search/**
+
+        - id: service-home
+          uri: lb://service-home
+          predicates:
+            - Path=/*/home/**
 #
 #        - id: service-cart
 #          uri: lb://service-cart

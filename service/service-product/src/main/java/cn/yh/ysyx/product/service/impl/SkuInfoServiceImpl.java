@@ -280,4 +280,16 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
         queryWrapper.like(SkuInfo::getSkuName, keyword);
         return baseMapper.selectList(queryWrapper);
     }
+
+    /**
+     * 新人专享商品
+     * @return List<SkuInfo>
+     * @throws
+     */
+    @Override
+    public List<SkuInfo> findNewPersonSkuInfoList() {
+        LambdaQueryWrapper<SkuInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SkuInfo::getIsNewPerson, 1);
+        return baseMapper.selectList(queryWrapper);
+    }
 }

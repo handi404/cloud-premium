@@ -27,4 +27,22 @@ public interface ProductFeignClient {
 
     @PostMapping("/api/product/inner/findCategoryList")
     public List<Category> findCategoryList(@RequestBody List<Long> categoryIdList);
+
+    /**
+     * 所有商品分类
+     * @param
+     * @return List<Category>
+     * @throws
+     */
+    @GetMapping("/api/product/inner/findAllCategoryList")
+    public List<Category> findAllCategoryList();
+
+    /**
+     * 新人专享商品
+     * @param
+     * @return List<SkuInfo>
+     * @throws
+     */
+    @GetMapping("/api/product/inner/findNewPersonSkuInfoList")
+    public List<SkuInfo> findNewPersonSkuInfoList();
 }
