@@ -1,6 +1,7 @@
 package cn.yh.ysyx.activity.service;
 
 import cn.yh.ysyx.model.activity.ActivityInfo;
+import cn.yh.ysyx.model.activity.ActivityRule;
 import cn.yh.ysyx.model.product.SkuInfo;
 import cn.yh.ysyx.vo.activity.ActivityRuleVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -51,4 +52,12 @@ public interface ActivityInfoService extends IService<ActivityInfo> {
      * @throws
      */
     void saveActivityRule(ActivityRuleVo activityRuleVo);
+
+    /**
+     * 根据商品编号查询商品活动规则内容列表
+     * @param skuIdList
+     * @return Map<List<ActivityRule>> 
+     * @throws 
+     */
+    Map<Long, List<String>> findActivity(List<Long> skuIdList);
 }

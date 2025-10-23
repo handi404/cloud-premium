@@ -2,6 +2,7 @@ package cn.yh.ysyx.activity.service.impl;
 
 import cn.yh.ysyx.activity.service.ActivityRuleService;
 import cn.yh.ysyx.activity.service.ActivitySkuService;
+import cn.yh.ysyx.enums.ActivityType;
 import cn.yh.ysyx.model.activity.ActivityInfo;
 import cn.yh.ysyx.activity.mapper.ActivityInfoMapper;
 import cn.yh.ysyx.model.activity.ActivityRule;
@@ -18,6 +19,7 @@ import cn.yh.ysyx.activity.service.ActivityInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -139,5 +141,56 @@ public class ActivityInfoServiceImpl extends ServiceImpl<ActivityInfoMapper, Act
         // 将activitySkuList转换为Set集合(利用Set集合中的元素不重复实现去重)
         Set<ActivitySku> activitySkuSet = new HashSet<>(activitySkuList);
         activitySkuService.saveBatch(activitySkuSet);
+    }
+
+    /**
+     * 根据商品编号查询商品活动规则内容列表
+     * @param skuIdList
+     * @return Map<List < ActivityRule>>
+     * @throws
+     */
+    @Override
+    public Map<Long, List<String>> findActivity(List<Long> skuIdList) {
+        if (CollectionUtils.isEmpty(skuIdList)) {
+            return Collections.emptyMap();
+        }
+        Map<Long, List<String>> result = new HashMap<>();
+        for (Long skuId : skuIdList) {
+            // 根据商品id查询活动规则
+            List<ActivityRule> activityRuleList = baseMapper.findActivityRuleList(skuId);
+            if (!CollectionUtils.isEmpty(activityRuleList)) {
+                List<String> ruleList = new ArrayList<>(); // 商品的规则描述集合
+                for (ActivityRule activityRule : activityRuleList) {
+                    // 获取规则的描述
+                    String ruleDesc = getRuleDesc(activityRule);
+                    ruleList.add(ruleDesc);
+                }
+                result.put(skuId, ruleList);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 根据规则获取规则的描述
+     * @param activityRule
+     * @return
+     */
+    private String getRuleDesc(ActivityRule activityRule) {
+        StringBuffer ruleDesc = new StringBuffer();
+        if(activityRule.getActivityType()== ActivityType.FULL_REDUCTION){ //满减
+            ruleDesc.append("满")
+                    .append(activityRule.getConditionAmount())
+                    .append("元减")
+                    .append(activityRule.getBenefitAmount())
+                    .append("元");
+        }else if(activityRule.getActivityType()== ActivityType.FULL_DISCOUNT){ //满量打折
+            ruleDesc.append("满")
+                    .append(activityRule.getConditionNum())
+                    .append("件打")
+                    .append(activityRule.getBenefitDiscount())
+                    .append("折");
+        }
+        return ruleDesc.toString();
     }
 }

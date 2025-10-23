@@ -18,4 +18,14 @@
             </if>
         </where>
     </select>
+
+    <!--    根据商品编号查询活动规则列表-->
+    <resultMap id="activityRuleMap" type="cn.yh.ysyx.model.activity.ActivityRule" autoMapping="true"></resultMap>
+    <select id="findActivityRuleList" resultMap="activityRuleMap">
+        select rule.*
+        from activity_info info left join activity_sku sku on info.id=sku.activity_id
+                                left join activity_rule rule on sku.activity_id=rule.activity_id
+        where now() between start_time and end_time and sku.sku_id=#{skuId}
+          and info.is_deleted=0 and sku.is_deleted=0 and rule.is_deleted=0
+    </select>
 </mapper>

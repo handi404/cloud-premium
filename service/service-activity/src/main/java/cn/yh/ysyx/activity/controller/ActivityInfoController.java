@@ -4,6 +4,7 @@ package cn.yh.ysyx.activity.controller;
 import cn.yh.ysyx.common.result.Result;
 import cn.yh.ysyx.model.acl.Admin;
 import cn.yh.ysyx.model.activity.ActivityInfo;
+import cn.yh.ysyx.model.activity.ActivityRule;
 import cn.yh.ysyx.model.product.SkuInfo;
 import cn.yh.ysyx.vo.acl.AdminQueryVo;
 import cn.yh.ysyx.vo.activity.ActivityRuleVo;
@@ -104,5 +105,11 @@ public class ActivityInfoController {
     public Result<?> saveActivityRule(@RequestBody ActivityRuleVo activityRuleVo) {
         activityInfoService.saveActivityRule(activityRuleVo);
         return Result.ok(null);
+    }
+
+    @ApiOperation("根据skuId列表获取促销信息")
+    @PostMapping("/inner/findActivity")
+    public Map<Long, List<String>> findActivity(@RequestBody List<Long> skuIdList) {
+        return activityInfoService.findActivity(skuIdList);
     }
 }

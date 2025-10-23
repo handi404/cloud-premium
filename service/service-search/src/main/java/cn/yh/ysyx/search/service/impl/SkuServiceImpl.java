@@ -1,5 +1,6 @@
 package cn.yh.ysyx.search.service.impl;
 
+import cn.yh.ysyx.activity.ActivityFeignClient;
 import cn.yh.ysyx.common.util.AuthContextHolder;
 import cn.yh.ysyx.model.product.Category;
 import cn.yh.ysyx.model.product.SkuInfo;
@@ -18,6 +19,8 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class SkuServiceImpl implements SkuService {
@@ -26,6 +29,8 @@ public class SkuServiceImpl implements SkuService {
     private SkuRepository skuRepository;
     @Resource
     private ProductFeignClient productFeignClient;
+    @Resource
+    private ActivityFeignClient activityFeignClient;
 
     /**
      * 上架商品
@@ -96,6 +101,18 @@ public class SkuServiceImpl implements SkuService {
         } else {
             page = skuRepository.findByKeywordAndWareId(pageParam, keyword, wareId);
         }
+
+        // 获取商品的活动规则描述
+        // 1.获取商品编号集合
+        List<Long> skuIdList = page.getContent().stream()
+                .map(SkuEs::getId)
+                .collect(Collectors.toList());
+        // 2.根据skuId列表获取促销信息
+        Map<Long, List<String>> activityRuleMap = activityFeignClient.findActivity(skuIdList);
+        // 3.为商品设置对应的活动规则描述集合
+        page.getContent().forEach(skuEs -> {
+            skuEs.setRuleList(activityRuleMap.get(skuEs.getId()));
+        });
         return page;
     }
 }
