@@ -2,6 +2,9 @@ package cn.yh.ysyx.search.service;
 
 
 import cn.yh.ysyx.model.search.SkuEs;
+import cn.yh.ysyx.vo.search.SkuEsQueryVo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -30,4 +33,13 @@ public interface SkuService {
      * @throws
      */
     List<SkuEs> findHotSkuList();
+
+    /**
+     * 根据分类与关键字搜索商品
+     * @param pageParam
+     * @param skuEsQueryVo
+     * @return Page<SkuEs>
+     * @throws
+     */
+    Page<SkuEs> search(Pageable pageParam, SkuEsQueryVo skuEsQueryVo);
 }
